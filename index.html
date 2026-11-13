@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UnvibeCode | Weekly Digest</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6fa;color:#243047;font-family:Inter,Arial,sans-serif}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:230px;background:#17263b;color:white;padding:26px 17px;flex-shrink:0}
+.logo{font-size:21px;font-weight:800;letter-spacing:1px}
+.tag{font-size:10px;color:#a5b5cb;margin:7px 0 38px}
+.nav{padding:13px;border-radius:8px;margin:6px 0;color:#bdc9d9;cursor:pointer;font-size:14px}
+.nav:hover,.nav.active{background:#30445f;color:white}
+.main{padding:30px;width:100%;max-width:1500px;margin:auto;min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:25px}
+h1{font-size:26px;margin:0 0 7px}
+h2{font-size:18px;margin:0 0 17px}
+h3{font-size:15px;margin:0 0 15px}
+.muted{color:#8995a7;font-size:12px}
+button,.btn{border:0;background:#345de0;color:white;padding:10px 15px;border-radius:7px;cursor:pointer;font-weight:600;font-size:13px}
+button:hover{background:#2449bd}
+.secondary{background:#eaf0ff;color:#345de0}
+.secondary:hover{background:#dce6ff}
+.danger{background:#fff0ef;color:#c14b43}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card,.panel{background:white;border:1px solid #e8edf3;border-radius:11px;padding:19px;box-shadow:0 3px 12px #1a29400a}
+.card small{color:#8491a3}
+.number{font-size:28px;font-weight:750;margin:12px 0 5px}
+.green{color:#159b69}.orange{color:#d88b25}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.page{display:none}.page.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:#8995a7;font-weight:500;padding:12px 9px;border-bottom:1px solid #edf0f4}
+td{padding:14px 9px;border-bottom:1px solid #edf0f4}
+tr:last-child td{border-bottom:0}
+.status{padding:5px 8px;border-radius:20px;background:#e9f8f0;color:#16875c;font-size:11px;white-space:nowrap}
+.pill{padding:5px 8px;border-radius:20px;background:#edf1ff;color:#345de0;font-size:11px}
+.finding{padding:13px 0;border-bottom:1px solid #edf0f4;font-size:13px;line-height:1.6}
+.finding:last-child{border:0}
+input,select{padding:10px;border:1px solid #dce2eb;border-radius:7px;background:white;color:#243047;font-size:13px}
+input[type=file]{max-width:100%}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:17px}
+.toolbar input{flex:1;min-width:150px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:16px 0}
+.metric{background:#f5f7fb;padding:16px;border-radius:9px}
+.metric strong{font-size:23px;display:block;margin-top:8px}
+.empty{text-align:center;padding:35px;color:#8995a7}
+.note{padding:12px;background:#f0f4ff;border-radius:8px;color:#50648a;font-size:12px;line-height:1.6;margin-bottom:16px}
+.footer{text-align:center;color:#9aa5b4;font-size:11px;margin-top:25px}
+@media(max-width:850px){.sidebar{width:65px;padding:20px 7px}.logo{font-size:9px;writing-mode:vertical-rl}.tag{display:none}.nav{font-size:0;text-align:center}.nav:before{content:"◈";font-size:17px}.cards{grid-template-columns:repeat(2,1fr)}.grid,.bottom{grid-template-columns:1fr}}
+@media(max-width:500px){.main{padding:15px}.cards{gap:8px}.card,.panel{padding:13px}.number{font-size:23px}.compare-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="logo">◈ UNVIBECODE</div>
+<div class="tag">DEVELOPER INTELLIGENCE</div>
+<div class="nav active" data-page="overview">▦ &nbsp; Overview</div>
+<div class="nav" data-page="reports">◷ &nbsp; Weekly Reports</div>
+<div class="nav" data-page="compare">⇄ &nbsp; Compare Reports</div>
+<div class="nav" data-page="findings">⚑ &nbsp; Findings</div>
+<div class="nav" data-page="settings">⚙ &nbsp; Import Reports</div>
+</aside>
+
+<main class="main">
+<header>
+<div>
+<h1 id="pageTitle">Weekly Digest</h1>
+<div class="muted">Your codebase health at a glance</div>
+</div>
+<button onclick="showPage('settings')">+ Import Report</button>
+</header>
+
+<section id="overview" class="page active">
+<div class="cards">
+<div class="card"><small>Repositories</small><div class="number" id="repoCount">04</div><div class="muted">Tracked projects</div></div>
+<div class="card"><small>Reports stored</small><div class="number" id="reportCount">03</div><div class="muted">Report history</div></div>
+<div class="card"><small>Open findings</small><div class="number orange" id="openCount">03</div><div class="muted">Across latest reports</div></div>
+<div class="card"><small>Resolved findings</small><div class="number green" id="resolvedCount">05</div><div class="muted">In latest comparison</div></div>
+</div>
+<div class="grid">
+<div class="panel">
+<h3>Repository health trend</h3>
+<div class="muted">Illustrative sample reports until you import real analysis</div>
+<canvas id="chart" height="130"></canvas>
+</div>
+<div class="panel">
+<h3>Latest reports</h3>
+<div id="latestReports"></div>
+</div>
+</div>
+<div class="bottom">
+<div class="panel">
+<h3>Recent findings</h3>
+<div id="overviewFindings"></div>
+</div>
+<div class="panel">
+<h3>Next review</h3>
+<div style="font-size:23px;font-weight:700;margin:12px 0">Every Monday</div>
+<p class="muted">Review your repository analysis regularly to track changes over time.</p>
+<button class="secondary" onclick="alert('This is a suggested review schedule. Automatic scheduling is not enabled in this MVP.')">Review schedule details</button>
+</div>
+</div>
+</section>
+
+<section id="reports" class="page">
+<div class="panel">
+<h2>Weekly Report History</h2>
+<div class="note">Reports are stored in this browser. Sample reports are illustrative; imported reports are labelled separately.</div>
+<div class="toolbar">
+<input id="reportSearch" placeholder="Search repositories..." oninput="renderReports()">
+<button onclick="showPage('settings')">+ Import Report</button>
+</div>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Repository</th><th>Date</th><th>Health score</th><th>Source</th><th>Action</th></tr></thead>
+<tbody id="reportTable"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="compare" class="page">
+<div class="panel">
+<h2>Compare Weekly Reports</h2>
+<p class="muted">Select two reports from the same repository to examine changes.</p>
+<div class="compare-grid">
+<div><label class="muted">Older report</label><select id="oldReport" style="width:100%;margin-top:8px" onchange="compareReports()"></select></div>
+<div><label class="muted">Newer report</label><select id="newReport" style="width:100%;margin-top:8px" onchange="compareReports()"></select></div>
+</div>
+<div id="comparison"></div>
+</div>
+</section>
+
+<section id="findings" class="page">
+<div class="panel">
+<h2>Repository Findings</h2>
+<p class="muted">Findings from the most recent stored report for each repository.</p>
+<div id="allFindings"></div>
+</div>
+</section>
+
+<section id="settings" class="page">
+<div class="panel">
+<h2>Import UnvibeCode Analysis</h2>
+<p class="muted">Import a JSON report to save it in your weekly history.</p>
+<div class="note">Import real report data whenever available. The sample data in this dashboard is only for demonstrating the interface. Your imported file should contain a repository name, date, health score and findings.</div>
+<label class="muted">Choose JSON report file</label>
+<br><br>
+<input type="file" id="fileInput" accept=".json,application/json">
+<br><br>
+<button onclick="importReport()">Import Report</button>
+<button class="secondary" onclick="downloadTemplate()">Download JSON example</button>
+<div id="importMessage" style="margin-top:15px;font-size:13px"></div>
+<hr style="border:0;border-top:1px solid #edf0f4;margin:25px 0">
+<h3>Browser data</h3>
+<p class="muted">Your reports are saved locally in this browser using localStorage. They are not uploaded to a server.</p>
+<button class="danger" onclick="resetData()">Reset sample data</button>
+</div>
+</section>
+
+<div class="footer">UNVIBECODE · WEEKLY DEVELOPER DIGEST · REPORT DATA STORED LOCALLY</div>
+</main>
+</div>
+
+<script>
+const KEY="unvibecode_digest_reports_v1";
+const samples=[
+{id:"s1",repo:"payment-service",date:"2026-10-30",score:76,source:"Sample",findings:[
+{id:"F1",title:"Dependency update recommended",status:"open",severity:"Medium"},
+{id:"F2",title:"Potential code-quality issue",status:"open",severity:"Low"},
+{id:"F3",title:"Missing input validation",status:"open",severity:"High"},
+{id:"F4",title:"Outdated configuration",status:"resolved",severity:"Low"}]},
+{id:"s2",repo:"payment-service",date:"2026-11-06",score:84,source:"Sample",findings:[
+{id:"F1",title:"Dependency update recommended",status:"open",severity:"Medium"},
+{id:"F2",title:"Potential code-quality issue",status:"resolved",severity:"Low"},
+{id:"F5",title:"Uncovered error-handling path",status:"open",severity:"Medium"},
+{id:"F4",title:"Outdated configuration",status:"resolved",severity:"Low"}]},
+{id:"s3",repo:"payment-service",date:"2026-11-13",score:91,source:"Sample",findings:[
+{id:"F1",title:"Dependency update recommended",status:"resolved",severity:"Medium"},
+{id:"F5",title:"Uncovered error-handling path",status:"open",severity:"Medium"},
+{id:"F6",title:"Potential logging improvement",status:"open",severity:"Low"}]}
+];
+let reports;
+try{
+const saved=JSON.parse(localStorage.getItem(KEY));
+reports=Array.isArray(saved)?saved:samples;
+}catch(e){reports=samples}
+let chart;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(reports))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function dateLabel(d){return new Date(d+"T00:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})}
+function latestByRepo(){
+const map={};
+[...reports].sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>map[r.repo]=r);
+return Object.values(map)
+}
+function showPage(page){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(page).classList.add("active");
+document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+document.getElementById("pageTitle").textContent=({
+overview:"Weekly Digest",reports:"Weekly Report History",compare:"Report Comparison",findings:"Repository Findings",settings:"Import Analysis Reports"
+})[page];
+if(page==="compare")setupCompare();
+if(page==="reports")renderReports();
+if(page==="findings")renderFindings();
+}
+document.querySelectorAll(".nav").forEach(n=>n.addEventListener("click",()=>showPage(n.dataset.page)));
+
+function renderReports(){
+const q=(document.getElementById("reportSearch").value||"").toLowerCase();
+const rows=[...reports].sort((a,b)=>b.date.localeCompare(a.date)).filter(r=>r.repo.toLowerCase().includes(q));
+document.getElementById("reportTable").innerHTML=rows.length?rows.map(r=>`<tr><td><strong>${esc(r.repo)}</strong></td><td>${dateLabel(r.date)}</td><td><strong>${r.score}/100</strong></td><td><span class="pill">${esc(r.source||"Imported")}</span></td><td><button class="secondary" onclick="selectForCompare('${r.id}')">Compare</button></td></tr>`).join(""):'<tr><td colspan="5">No matching reports found.</td></tr>';
+}
+function selectForCompare(id){
+showPage("compare");
+document.getElementById("newReport").value=id;
+compareReports();
+}
+function setupCompare(){
+const sorted=[...reports].sort((a,b)=>a.date.localeCompare(b.date));
+const options=sorted.map(r=>`<option value="${esc(r.id)}">${esc(r.repo)} — ${dateLabel(r.date)}</option>`).join("");
+document.getElementById("oldReport").innerHTML=options;
+document.getElementById("newReport").innerHTML=options;
+if(sorted.length>1){
+document.getElementById("oldReport").value=sorted[sorted.length-2].id;
+document.getElementById("newReport").value=sorted[sorted.length-1].id;
+}
+compareReports();
+}
+function compareReports(){
+const old=reports.find(r=>r.id===document.getElementById("oldReport").value);
+const newer=reports.find(r=>r.id===document.getElementById("newReport").value);
+const out=document.getElementById("comparison");
+if(!old||!newer){out.innerHTML='<div class="empty">Import at least two reports to compare them.</div>';return}
+if(old.repo!==newer.repo){out.innerHTML='<div class="empty">Please select reports from the same repository.</div>';return}
+const oldMap=new Map(old.findings.map(f=>[f.id,f]));
+const newMap=new Map(newer.findings.map(f=>[f.id,f]));
+const added=newer.findings.filter(f=>!oldMap.has(f.id));
+const removed=old.findings.filter(f=>!newMap.has(f.id));
+const resolved=newer.findings.filter(f=>oldMap.has(f.id)&&oldMap.get(f.id).status!=="resolved"&&f.status==="resolved");
+const persistent=newer.findings.filter(f=>oldMap.has(f.id)&&f.status!=="resolved");
+const delta=newer.score-old.score;
+out.innerHTML=`
+<div class="compare-grid">
+<div class="metric"><span class="muted">Previous health</span><strong>${old.score}/100</strong><small>${dateLabel(old.date)}</small></div>
+<div class="metric"><span class="muted">Latest health</span><strong>${newer.score}/100</strong><small>${dateLabel(newer.date)}</small></div>
+</div>
+<div class="cards">
+<div class="card"><small>Score change</small><div class="number ${delta>=0?'green':'orange'}">${delta>0?'+':''}${delta}</div></div>
+<div class="card"><small>New findings</small><div class="number orange">${added.length}</div></div>
+<div class="card"><small>Resolved</small><div class="number green">${resolved.length}</div></div>
+<div class="card"><small>Persistent</small><div class="number">${persistent.length}</div></div>
+</div>
+<h3>Comparison details</h3>
+${findingGroup("New findings",added,"New")}
+${findingGroup("Resolved findings",resolved,"Resolved")}
+${findingGroup("Persistent findings",persistent,"Open")}
+${findingGroup("No longer present",removed,"Not present")}
+<div class="note">Comparison is based on finding IDs and statuses in the two imported reports. A finding disappearing from a report is not automatically treated as resolved.</div>`;
+}
+function findingGroup(title,items,label){
+return `<div style="padding:12px 0;border-bottom:1px solid #edf0f4"><strong>${title} (${items.length})</strong>${items.length?items.map(f=>`<div class="finding">${esc(f.title)} <span class="pill">${esc(f.severity||label)}</span></div>`).join(""):'<p class="muted">None</p>'}</div>`
+}
+function renderFindings(){
+const latest=latestByRepo();
+document.getElementById("allFindings").innerHTML=latest.map(r=>`<h3 style="margin-top:20px">${esc(r.repo)}</h3>${r.findings.map(f=>`<div class="finding">${esc(f.title)} <span class="pill">${esc(f.status)}</span> <span class="muted">${esc(f.severity||"Unspecified")}</span></div>`).join("")||'<p class="muted">No findings recorded.</p>'}`).join("")||'<div class="empty">No reports available.</div>';
+}
+function importReport(){
+const file=document.getElementById("fileInput").files[0],msg=document.getElementById("importMessage");
+if(!file){msg.textContent="Please choose a JSON file.";return}
+const reader=new FileReader();
+reader.onload=()=>{
+try{
+const data=JSON.parse(reader.result);
+const repo=data.repo||data.repository||data.repository_name;
+const date=data.date||data.generated_at||new Date().toISOString().slice(0,10);
+const score=Number(data.score??data.health_score);
+if(!repo||!Number.isFinite(score)||score<0||score>100||!Array.isArray(data.findings))throw Error("Expected repo, date, score (0–100), and findings array.");
+const findings=data.findings.map((f,i)=>({
+id:String(f.id||f.finding_id||("F"+(i+1))),
+title:String(f.title||f.name||f.description||"Untitled finding"),
+status:String(f.status||"open").toLowerCase(),
+severity:String(f.severity||"Unspecified")
+}));
+if(!findings.every(f=>["open","resolved","closed","persistent"].includes(f.status)))throw Error("Finding status must be open, resolved, closed, or persistent.");
+reports.push({id:"r"+Date.now(),repo:String(repo),date:String(date).slice(0,10),score,source:"Imported",findings});
+save();renderAll();
+msg.style.color="#16875c";msg.textContent="Report imported successfully!";
+document.getElementById("fileInput").value="";
+}catch(e){msg.style.color="#c14b43";msg.textContent="Import failed: "+e.message}
+};
+reader.readAsText(file);
+}
+function downloadTemplate(){
+const example={repo:"my-project",date:new Date().toISOString().slice(0,10),score:85,findings:[{id:"F1",title:"Example dependency issue",status:"open",severity:"Medium"},{id:"F2",title:"Example resolved issue",status:"resolved",severity:"Low"}]};
+const a=document.createElement("a");
+a.href=URL.createObjectURL(new Blob([JSON.stringify(example,null,2)],{type:"application/json"}));
+a.download="unvibecode-report-example.json";a.click();URL.revokeObjectURL(a.href);
+}
+function resetData(){
+if(!confirm("Reset all browser reports to the original sample reports?"))return;
+reports=[...samples];save();renderAll();
+}
+function renderAll(){
+save();
+const latest=latestByRepo();
+document.getElementById("repoCount").textContent=String(latest.length).padStart(2,"0");
+document.getElementById("reportCount").textContent=reports.length;
+const last=[...reports].sort((a,b)=>a.date.localeCompare(b.date)).slice(-1)[0];
+document.getElementById("openCount").textContent=last?last.findings.filter(f=>f.status!=="resolved"&&f.status!=="closed").length:0;
+const sorted=[...reports].sort((a,b)=>a.date.localeCompare(b.date));
+let resolved=0;
+if(sorted.length>1){
+const a=sorted[sorted.length-2],b=sorted[sorted.length-1];
+if(a.repo===b.repo)resolved=b.findings.filter(f=>f.status==="resolved"&&a.findings.some(x=>x.id===f.id&&x.status!=="resolved")).length;
+}
+document.getElementById("resolvedCount").textContent=resolved;
+document.getElementById("latestReports").innerHTML=[...reports].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map(r=>`<div class="finding"><strong>${esc(r.repo)}</strong><br><span class="muted">${dateLabel(r.date)} · ${r.score}/100</span></div>`).join("")||'<div class="empty">No reports yet.</div>';
+document.getElementById("overviewFindings").innerHTML=last?last.findings.slice(0,4).map(f=>`<div class="finding">${esc(f.title)} <span class="pill">${esc(f.status)}</span></div>`).join(""):'<div class="empty">No findings.</div>';
+renderReports();renderFindings();updateChart();
+}
+function updateChart(){
+const sorted=[...reports].sort((a,b)=>a.date.localeCompare(b.date)).slice(-8);
+if(chart)chart.destroy();
+chart=new Chart(document.getElementById("chart"),{
+type:"line",
+data:{labels:sorted.map(r=>dateLabel(r.date)),datasets:[{label:"Health score",data:sorted.map(r=>r.score),borderColor:"#4569e8",backgroundColor:"rgba(69,105,232,.10)",fill:true,tension:.3}]},
+options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:100},x:{grid:{display:false}}}}
+});
+}
+renderAll();
+</script>
+</body>
+</html>
